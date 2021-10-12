@@ -47,14 +47,12 @@ export function order(a,p){
             return {
                 order: f,
                 primitive: false,
-                fpa: fpa
             }
         }
     })
     return {
         order: p-1,
         primitive: true,
-        fpa: null
     }
 }
 
@@ -78,5 +76,9 @@ export function tinyGiant(g,h,p){
             x = i+idx*n;
         }
     }
-    return x;
+    return {
+        x: x,
+        l1: l1,
+        l2: l2
+    };
 }

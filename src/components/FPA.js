@@ -1,30 +1,41 @@
-import { useState, useRef } from "react";
-import { FPAcalc } from "../algorithms";
-const update = (set) => (val) => {
-        set(val.target.value);
-}
+import { useState, useRef, useEffect } from "react";
+import { FPAcalc } from "../algorithms.js";
 
-const FPAinput = () => {
+const FPA = () => {
     const [base, setBase] = useState(null);
     const [exp, setExp] = useState(null);
     const [mod, setMod] = useState(null);
     const [result, setResult] = useState(null);
+    const baseRef = useRef("base");
+    const expRef = useRef("exp");
+    const modRef = useRef("mod");
+    const update = (set) => (val) => {
+        if(val.target.value===""){
+            set(null);
+        } else{
+            set(parseInt(val.target.value));
+        }
+    }
+    useEffect(()=>{
+        if(base !== null && exp !== null && mod !== null)
+            setResult(FPAcalc(base,exp,mod).result);
+        else
+            setResult(null);
+    }, [base, exp, mod])
     return (
         <div>
-            <h1> Fast Powering Algorithm </h1>
-            <form onSubmit={()=> setResult(FPAcalc(base,exp,mod).result)}>
-                <input type="number" value={base} onChange={update(setBase)}/>
-                <input type="number" value={exp} onChange={update(setExp)}/>
-                <input type="number submit" value={mod} onChange={update(setMod)} onSubmit={()=> setResult(FPAcalc(base,exp,mod).result)}/>
+            <h1> modular exponentiation </h1>
+            <form>
+                <label for={baseRef}>Base </label>
+                <input type="number" ref={baseRef} onChange={update(setBase)}/> <br/>
+                <label for={expRef}>Exp </label>
+                <input type="number" onChange={update(setExp)}/><br/>
+                <label for={modRef}>N </label>
+                <input type="number" onChange={update(setMod)}/>
             </form>
-            <h1>{result}</h1>
+            <h1>{(base ? base : "base")}<sup>{(exp ? exp : "exp")}
+            </sup> mod {(mod ? mod : "N")+" = "+(result ? result : "a")}</h1>
         </div>
-    )
-}
-const FPA = () => {
-    const [inputs, setInputs]=useState(new Array(1).fill(0))
-    return (
-        <FPAinput/>
     )
 }
 
