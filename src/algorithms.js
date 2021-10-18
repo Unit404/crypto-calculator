@@ -1,5 +1,5 @@
 export function FPAcalc(g,A,N){
-    if(g<=0 || A < 0 || N <= 1){
+    if(g<0 || A < 0 || N <= 1){
         return {
             a: [],
             b: [],
@@ -81,4 +81,39 @@ export function tinyGiant(g,h,p){
         l1: l1,
         l2: l2
     };
+}
+
+export function EEA(a,b){
+    if(a<=0 || b<=0){
+        return {inv: 0, gcd:0}
+    }
+    let arr, row2chg=0;
+    let inv, gcd;
+    if(a<b){
+        arr=[[1,0,b],
+            [0,1,a]];
+    } else{
+        arr=[[1,0,a],
+            [0,1,b]];
+    }
+    
+    while(arr[1-row2chg][2]%arr[row2chg][2]!==0){
+        console.log(arr)
+        let r1=arr[row2chg], r2=arr[1-row2chg];
+        let factor = Math.floor(r1[2]/r2[2])
+        for(let i = 0; i <= 2; i++){
+            r1[i]-=factor*r2[i];
+        }
+        arr=[r1,r2];
+        row2chg=1-row2chg
+    }
+    gcd=arr[row2chg][2];
+    inv=arr[row2chg][1];
+    if(gcd!==1){
+        inv=0;
+    }
+    return {
+        inv: inv,
+        gcd: gcd
+    }
 }

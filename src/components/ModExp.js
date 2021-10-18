@@ -1,26 +1,33 @@
 import { useState, useRef, useEffect } from "react";
-import { FPAcalc } from "../algorithms.js";
+import { FPAcalc, EEA } from "../algorithms.js";
 
-const FPA = () => {
-    const [base, setBase] = useState(null);
-    const [exp, setExp] = useState(null);
-    const [mod, setMod] = useState(null);
-    const [result, setResult] = useState(null);
+const ModExp = () => {
+    const [base, setBase] = useState("none");
+    const [exp, setExp] = useState("none");
+    const [mod, setMod] = useState("none");
+    const [result, setResult] = useState("none");
     const baseRef = useRef("base");
     const expRef = useRef("exp");
     const modRef = useRef("mod");
     const update = (set) => (val) => {
         if(val.target.value===""){
-            set(null);
+            set("none");
         } else{
             set(parseInt(val.target.value));
         }
     }
     useEffect(()=>{
-        if(base !== null && exp !== null && mod !== null)
-            setResult(FPAcalc(base,exp,mod).result);
+        if(base !== "none" && exp !== "none" && mod !== "none")
+            
+            if(exp<0){
+                let inv = EEA(base, mod).inv;
+                setResult(FPAcalc(inv, exp*-1, mod).result);
+            } else{
+
+                setResult(FPAcalc(base,exp,mod).result);
+            }
         else
-            setResult(null);
+            setResult("none");
     }, [base, exp, mod])
     return (
         <div>
@@ -33,10 +40,10 @@ const FPA = () => {
                 <label for={modRef}>N </label>
                 <input type="number" onChange={update(setMod)}/>
             </form>
-            <h1>{(base ? base : "base")}<sup>{(exp ? exp : "exp")}
-            </sup> mod {(mod ? mod : "N")+" = "+(result ? result : "a")}</h1>
+            <h1>{(base!=="none" ? base : "base")}<sup>{(exp!=="none" ? exp : "exp")}
+            </sup> mod {(mod>=0 && mod!=="none" ? mod : "N")+" = "+(result!=="none" ? result : "a")}</h1>
         </div>
     )
 }
 
-export default FPA
+export default ModExp
