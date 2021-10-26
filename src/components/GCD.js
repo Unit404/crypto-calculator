@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { EEA } from "./algorithms";
+import { EEA } from "../algorithms";
 const update = (set) => (val) => {
     if(val.target.value===""){
         set(-1);
